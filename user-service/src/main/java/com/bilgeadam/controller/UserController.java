@@ -18,12 +18,20 @@ import static com.bilgeadam.constant.ApiUrls.*;
 public class UserController {
     private final UserService userService;
 
-
     @GetMapping(FIND_ALL)
     public ResponseEntity<List<UserProfile>> findAll() {
         return ResponseEntity.ok(userService.findAll());
     }
 
+    @PostMapping("/create-user-with-auth")
+    public ResponseEntity<Boolean> createUserFromAuth(@RequestBody CreateUserRequestDto dto){
+        return ResponseEntity.ok(userService.createUserFromAuth(dto));
+    }
+
+    @GetMapping("/activate-status/{authId}")
+    public ResponseEntity<Boolean> activateAccount(@PathVariable Long authId){
+        return ResponseEntity.ok(userService.activateAccount(authId));
+    }
 
 
 
