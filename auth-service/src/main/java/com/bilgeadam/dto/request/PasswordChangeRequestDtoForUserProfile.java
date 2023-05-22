@@ -1,4 +1,4 @@
-package com.bilgeadam.dto.response;
+package com.bilgeadam.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ForgotPasswordResponseDto {
-    String email;
+public class PasswordChangeRequestDtoForUserProfile {
+    Long authId;
     String password;
 }

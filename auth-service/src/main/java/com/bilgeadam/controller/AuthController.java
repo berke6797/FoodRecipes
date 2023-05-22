@@ -43,4 +43,8 @@ public class AuthController {
     public ResponseEntity<Boolean> changePasswordFromUser(@RequestBody PasswordChangeRequestDtoForAuth dto){
         return ResponseEntity.ok(authService.changePasswordFromUser(dto));
     }
+    @PostMapping("/forgot-password-from-auth/{email}/{username}")
+    public ResponseEntity<Boolean> forgotPasswordFromAuth(@PathVariable String email,@PathVariable String username){
+        return ResponseEntity.ok(authService.forgotPasswordFromAuth(email, username));
+    }
 }

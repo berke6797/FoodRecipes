@@ -2,6 +2,7 @@ package com.bilgeadam.controller;
 
 import com.bilgeadam.dto.request.CreateUserRequestDto;
 import com.bilgeadam.dto.request.PasswordChangeRequestDto;
+import com.bilgeadam.dto.request.PasswordChangeRequestDtoForUserProfile;
 import com.bilgeadam.repository.entity.UserProfile;
 import com.bilgeadam.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,12 @@ public class UserController {
     public ResponseEntity<Boolean> changePassword(@RequestBody PasswordChangeRequestDto dto, @PathVariable String token){
         return ResponseEntity.ok(userService.changePassword(dto,token));
     }
+
+    @PostMapping("/forgot-password-from-auth")
+    public ResponseEntity<Boolean> forgotPasswordFromAuth(@RequestBody PasswordChangeRequestDtoForUserProfile dto){
+        return ResponseEntity.ok(userService.forgotPasswordFromAuth(dto));
+    }
+
 
 
 

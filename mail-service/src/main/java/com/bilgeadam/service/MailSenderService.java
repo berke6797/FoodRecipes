@@ -1,5 +1,6 @@
 package com.bilgeadam.service;
 
+import com.bilgeadam.dto.response.ForgotPasswordResponseDto;
 import com.bilgeadam.rabbitmq.model.RegisterMailModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -25,5 +26,21 @@ public class MailSenderService {
             e.printStackTrace();
         }
         javaMailSender.send(mailMessage);
+    }
+
+    public Boolean forgotPasswordFromAuth(ForgotPasswordResponseDto dto){
+        try{
+            SimpleMailMessage mailMessage= new SimpleMailMessage();
+            mailMessage.setFrom("${spring.mail.username}");
+            mailMessage.setTo(dto.getEmail());
+            mailMessage.setSubject("ŞİFRE SIFIRLAMA");
+            mailMessage.setText("Şifrenizi başarıyla sıfırladınız \n"+
+                    "Yeni şifreniz : "+ dto.getPassword() +
+                    "\n Yeni şifreyle giriş yaptıktan sonra güvenlik gereği şifrenizi değiştiriniz.");
+            javaMailSender.send(mailMessage);
+        }catch (Exception e){
+            e.getMessage();
+        }
+      return true;
     }
 }

@@ -3,6 +3,7 @@ package com.bilgeadam.service;
 import com.bilgeadam.dto.request.CreateUserRequestDto;
 import com.bilgeadam.dto.request.PasswordChangeRequestDto;
 import com.bilgeadam.dto.request.PasswordChangeRequestDtoForAuth;
+import com.bilgeadam.dto.request.PasswordChangeRequestDtoForUserProfile;
 import com.bilgeadam.manager.IAuthManager;
 import com.bilgeadam.mapper.IUserMapper;
 import com.bilgeadam.repository.IUserRepository;
@@ -79,5 +80,14 @@ public class UserService extends ServiceManager<UserProfile, String> {
         }
     }
 
+    public Boolean forgotPasswordFromAuth(PasswordChangeRequestDtoForUserProfile dto) {
+        Optional<UserProfile> user = userRepository.findByAuthId(dto.getAuthId());
+        if (user.isEmpty()) {
+            throw new RuntimeException("Böyle bir kullanıcı bulunamadı");
+        }
+        user.get().setPassword(dto.getPassword());
+        update(user.get());
+        return true;
+    }
 
 }

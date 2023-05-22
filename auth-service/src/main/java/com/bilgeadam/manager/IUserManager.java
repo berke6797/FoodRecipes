@@ -1,7 +1,7 @@
 package com.bilgeadam.manager;
 
 import com.bilgeadam.dto.request.CreateUserRequestDto;
-import org.mapstruct.BeanMapping;
+import com.bilgeadam.dto.request.PasswordChangeRequestDtoForUserProfile;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,5 +15,7 @@ public interface IUserManager {
     public ResponseEntity<Boolean> createUserFromAuth(@RequestBody CreateUserRequestDto dto);
     @GetMapping("/activate-status/{authId}")
     public ResponseEntity<Boolean> activateAccount(@PathVariable Long authId);
+    @PostMapping("/forgot-password-from-auth")
+    public ResponseEntity<Boolean> forgotPasswordFromAuth(@RequestBody PasswordChangeRequestDtoForUserProfile dto);
 
 }
