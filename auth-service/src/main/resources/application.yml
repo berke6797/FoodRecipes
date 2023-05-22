@@ -14,8 +14,17 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: java7
+    password: root
 
 jwt:
   secretkey: ${secretkey}
   audience: ${audience}
   issuer: ${issuer}
+rabbitmq:
+  exchange-auth: auth-exchange
+  registerMailQueue: mail-queue
+  registerMailBindingKey: mail-key

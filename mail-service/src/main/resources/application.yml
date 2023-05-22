@@ -1,0 +1,24 @@
+server:
+  port: 9095
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: java7
+    password: root
+
+  mail:
+    username: berkekznc97@gmail.com
+    # Google account manager'daki uygulama şifrelerden oluşturuldu.
+    password: awyffmifkwjkhmqt
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+rabbitmq:
+  registerMailQueue: mail-queue

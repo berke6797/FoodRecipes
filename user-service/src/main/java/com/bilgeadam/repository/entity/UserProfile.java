@@ -22,6 +22,7 @@ public class UserProfile extends Base{
     private String surname;
     private String email;
     private String username;
+    private String password;
     private String street;              // Sokak
     private String neighbourhood;       // Mahalle
     private String district;            // İlçe

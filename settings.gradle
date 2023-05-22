@@ -5,4 +5,5 @@ include 'recipe-service'
 include 'comment-service'
 include 'mail-service'
 include 'user-service'
+include 'mail-service'
 
