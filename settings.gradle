@@ -7,4 +7,5 @@ include 'mail-service'
 include 'user-service'
 include 'mail-service'
 include 'recipe-service'
+include 'comment-service'
 

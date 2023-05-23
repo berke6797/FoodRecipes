@@ -51,5 +51,6 @@ public class RecipeService extends ServiceManager<Recipe, String> {
         return true;
     }
 
+    public List<Recipe> sortAllRecipe
 
 }

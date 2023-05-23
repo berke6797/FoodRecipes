@@ -27,5 +27,7 @@ public class Recipe extends Base {
     private List<Ingredient> ingredients;
     private NutritionalValue nutritionalValue;
     private List<String> categoryId;
+    private List<String> commentId;
+    private List<String> pointId;
 
 }
