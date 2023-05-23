@@ -1,6 +1,5 @@
 server:
-  port: 9091
-
+  port: 9092
 spring:
   data:
     mongodb:
@@ -9,7 +8,6 @@ spring:
       database: YemekTarifiUygulamaDB
       username: JavaUser
       password: root
-
 jwt:
   secretkey: ${secretkey}
   audience: ${audience}

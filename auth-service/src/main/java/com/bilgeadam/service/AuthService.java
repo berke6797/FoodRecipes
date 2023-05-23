@@ -81,7 +81,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         } else if (!optionalAuth.get().getStatus().equals(EStatus.ACTIVE)) {
             throw new RuntimeException("Hesap aktif edilmemiştir. Lütfen aktivasyon işlemini gerçekleştiriniz");
         }
-        return jwtTokenProvider.createToken(optionalAuth.get().getAuthId()).get();
+        return jwtTokenProvider.createToken(optionalAuth.get().getAuthId(),optionalAuth.get().getRole()).get();
     }
 
     public Boolean changePasswordFromUser(PasswordChangeRequestDtoForAuth dto) {
