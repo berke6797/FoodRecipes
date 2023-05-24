@@ -4,6 +4,7 @@ import com.bilgeadam.dto.request.CreateUserRequestDto;
 import com.bilgeadam.dto.request.PasswordChangeRequestDto;
 import com.bilgeadam.dto.request.PasswordChangeRequestDtoForAuth;
 import com.bilgeadam.dto.request.PasswordChangeRequestDtoForUserProfile;
+import com.bilgeadam.dto.response.GetUserProfileResponseDto;
 import com.bilgeadam.manager.IAuthManager;
 import com.bilgeadam.mapper.IUserMapper;
 import com.bilgeadam.repository.IUserRepository;
@@ -88,6 +89,16 @@ public class UserService extends ServiceManager<UserProfile, String> {
         user.get().setPassword(dto.getPassword());
         update(user.get());
         return true;
+    }
+
+    public GetUserProfileResponseDto getUserForCommentService(Long authId){
+        Optional<UserProfile> optionalUser= userRepository.findByAuthId(authId);
+        if (optionalUser.isEmpty()){
+            throw new RuntimeException("Böyle bir kullanıcı bulunamadı");
+        }
+        GetUserProfileResponseDto userProfileResponseDto=
+                IUserMapper.INSTANCE.getUserProfileFromUserProfile(optionalUser.get());
+        return userProfileResponseDto;
     }
 
 }

@@ -9,6 +9,7 @@ import com.bilgeadam.repository.entity.Recipe;
 import com.bilgeadam.repository.enums.ERole;
 import com.bilgeadam.utility.JwtTokenProvider;
 import com.bilgeadam.utility.ServiceManager;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class RecipeService extends ServiceManager<Recipe, String> {
         this.recipeRepository = recipeRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
+
     public Boolean saveRecipe(String token, SaveRecipeRequestDto dto) {
         Optional<String> role = jwtTokenProvider.getRoleFromToken(token);
         if (!role.get().equals(ERole.ADMIN.toString())) {
@@ -32,6 +34,7 @@ public class RecipeService extends ServiceManager<Recipe, String> {
         save(IRecipeMapper.INSTANCE.fromSaveRecipeRequestDtoToRecipe(dto));
         return true;
     }
+
     public UpdateRecipeResponseDto updateRecipe(String token, UpdateRecipeRequestDto dto) {
         Optional<String> role = jwtTokenProvider.getRoleFromToken(token);
         if (!role.get().equals(ERole.ADMIN.toString())) {
@@ -42,6 +45,7 @@ public class RecipeService extends ServiceManager<Recipe, String> {
         UpdateRecipeResponseDto updateRecipeResponseDto = IRecipeMapper.INSTANCE.fromRecipeToUpdateRecipeResponseDto(recipe);
         return updateRecipeResponseDto;
     }
+
     public Boolean deleteRecipe(String token, String recipeId) {
         Optional<String> role = jwtTokenProvider.getRoleFromToken(token);
         if (!role.get().equals(ERole.ADMIN.toString())) {
@@ -51,6 +55,14 @@ public class RecipeService extends ServiceManager<Recipe, String> {
         return true;
     }
 
-    public List<Recipe> sortAllRecipe
+    public Boolean saveRecipeCommentFromComment(String commentId,String recipeId) {
+        Optional<Recipe> recipe=recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()){
+            throw new RuntimeException("Böyle bir recipe bulunmamaktadır");
+        }
+        recipe.get().getCommentId().add(commentId);
+        update(recipe.get());
+        return true;
+    }
 
 }

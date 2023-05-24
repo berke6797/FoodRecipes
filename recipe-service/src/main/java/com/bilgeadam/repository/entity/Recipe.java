@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,8 +27,8 @@ public class Recipe extends Base {
     private String photos;
     private List<Ingredient> ingredients;
     private NutritionalValue nutritionalValue;
-    private List<String> categoryId;
-    private List<String> commentId;
-    private List<String> pointId;
+    private List<String> categoryId = new ArrayList<>();
+    private List<String> commentId = new ArrayList<>();
+    private List<String> pointId = new ArrayList<>();
 
 }

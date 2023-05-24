@@ -6,6 +6,7 @@ import com.bilgeadam.dto.response.RegisterResponseDto;
 import com.bilgeadam.repository.entity.Auth;
 import com.bilgeadam.repository.entity.Base;
 import com.bilgeadam.service.AuthService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody LoginRequestDto dto){
         return ResponseEntity.ok(authService.login(dto));
     }
+    @Hidden
     @PostMapping("/change-password-from-user")
     public ResponseEntity<Boolean> changePasswordFromUser(@RequestBody PasswordChangeRequestDtoForAuth dto){
         return ResponseEntity.ok(authService.changePasswordFromUser(dto));

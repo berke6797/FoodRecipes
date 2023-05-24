@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface IRecipeRepository extends MongoRepository<Recipe,String> {
-
+    Optional<Recipe> findRecipeByCommentId(String commentId);
 }

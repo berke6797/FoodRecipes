@@ -6,6 +6,7 @@ import com.bilgeadam.dto.response.UpdateRecipeResponseDto;
 import com.bilgeadam.repository.entity.Category;
 import com.bilgeadam.repository.entity.Recipe;
 import com.bilgeadam.service.RecipeService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,10 @@ public class RecipeController {
     public ResponseEntity<List<Recipe>> findAllRecipe(){
         return ResponseEntity.ok(recipeService.findAll());
     }
-
+    @Hidden
+    @PostMapping("/save-comment-to-recipe/{commentId}/{recipeId}")
+    public ResponseEntity<Boolean> saveRecipeCommentFromComment(@PathVariable String commentId, @PathVariable String recipeId){
+        return ResponseEntity.ok(recipeService.saveRecipeCommentFromComment(commentId,recipeId));
+    }
 
 }

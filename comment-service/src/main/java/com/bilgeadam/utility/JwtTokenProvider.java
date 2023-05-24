@@ -6,7 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bilgeadam.exception.CommentManagerException;
 import com.bilgeadam.exception.ErrorType;
-import com.bilgeadam.exception.UserManagerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,6 +53,21 @@ public class JwtTokenProvider {
             Long id = decodedJWT.getClaim("id").asLong();
             return Optional.of(id); // == Optional<Long>
         }catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new CommentManagerException(ErrorType.INVALID_TOKEN);
+        }
+    }
+    public Optional<String> getRoleFromToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC512(secretKey);
+            JWTVerifier verifier = JWT.require(algorithm).withAudience(audience).withIssuer(issuer).build();
+            DecodedJWT decodedJWT = verifier.verify(token);
+            if (decodedJWT == null) {
+                throw new CommentManagerException(ErrorType.INVALID_TOKEN);
+            }
+            String role = decodedJWT.getClaim("role").asString();
+            return Optional.of(role);
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         }

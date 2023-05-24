@@ -20,5 +20,6 @@ public class Comment extends Base{
     private String userId;
     private String username;
     private String comment;
-    private String commentDate;
+    @Builder.Default
+    private Long commentDate=System.currentTimeMillis();
 }
