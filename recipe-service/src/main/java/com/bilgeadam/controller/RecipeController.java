@@ -3,7 +3,6 @@ package com.bilgeadam.controller;
 import com.bilgeadam.dto.request.SaveRecipeRequestDto;
 import com.bilgeadam.dto.request.UpdateRecipeRequestDto;
 import com.bilgeadam.dto.response.UpdateRecipeResponseDto;
-import com.bilgeadam.repository.entity.Category;
 import com.bilgeadam.repository.entity.Recipe;
 import com.bilgeadam.service.RecipeService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -40,5 +39,14 @@ public class RecipeController {
     public ResponseEntity<Boolean> saveRecipeCommentFromComment(@PathVariable String commentId, @PathVariable String recipeId){
         return ResponseEntity.ok(recipeService.saveRecipeCommentFromComment(commentId,recipeId));
     }
+
+    @Hidden
+    @DeleteMapping("/delete-comment-to-recipe/{recipeId}/{commentId}")
+    public ResponseEntity<Boolean> deleteRecipeCommentFromComment(@PathVariable String recipeId, @PathVariable String commentId){
+        return ResponseEntity.ok(recipeService.deleteRecipeCommentFromComment(recipeId,commentId));
+    }
+
+
+
 
 }

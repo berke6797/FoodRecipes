@@ -27,4 +27,9 @@ public class CommentController {
     public ResponseEntity<List<Comment>> findAllCommentFromUser(@PathVariable String token){
         return ResponseEntity.ok(commentService.findAllCommentFromUser(token));
     }
+
+    @DeleteMapping("/delete-comment/{token}/{commentId}")
+    public ResponseEntity<Boolean> deleteComment(@PathVariable String token, @PathVariable String commentId){
+        return ResponseEntity.ok(commentService.deleteComment(token,commentId));
+    }
 }

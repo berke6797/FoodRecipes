@@ -53,6 +53,10 @@ public class CategoryService extends ServiceManager<Category, String> {
         if (!role.get().equals(ERole.ADMIN.toString())) {
             throw new RuntimeException("Bu işlemi sadece ADMIN rolülne sahip kullanıcılar gerçekleştirebilir");
         }
+        Optional<Category> category= findById(categoryId);
+        if (category.isEmpty()){
+            throw new RuntimeException("Böyle bir kategori bulunmamaktadır");
+        }
         deleteById(categoryId);
         return true;
     }

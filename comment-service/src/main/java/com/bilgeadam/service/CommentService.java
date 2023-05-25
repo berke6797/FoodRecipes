@@ -8,10 +8,8 @@ import com.bilgeadam.manager.IUserManager;
 import com.bilgeadam.mapper.ICommentMapper;
 import com.bilgeadam.repository.ICommentRepository;
 import com.bilgeadam.repository.entity.Comment;
-import com.bilgeadam.repository.enums.ERole;
 import com.bilgeadam.utility.JwtTokenProvider;
 import com.bilgeadam.utility.ServiceManager;
-import io.lettuce.core.ScriptOutputType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +43,6 @@ public class CommentService extends ServiceManager<Comment, String> {
             throw new RuntimeException("Böyle bir tarif bulunmamaktadır");
         } else {
             save(comment);
-            System.out.println(comment);
             recipeManager.saveRecipeCommentFromComment(comment.getCommentId(), comment.getRecipeId());
             return true;
         }
@@ -53,12 +50,12 @@ public class CommentService extends ServiceManager<Comment, String> {
 
     public Boolean updateComment(String token, UpdateCommentRequestDto dto) {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
-        Comment comment= findById(dto.getCommentId()).get();
+        Comment comment = findById(dto.getCommentId()).get();
         if (authId.isEmpty()) {
             throw new RuntimeException("Geçersiz token bilgisi");
         }
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
-        ICommentMapper.INSTANCE.updateCommentDtoToComment(dto,comment);
+        ICommentMapper.INSTANCE.updateCommentDtoToComment(dto, comment);
         if (user.getUserId().equals(comment.getUserId())) {
             if (!comment.getCommentId().equals(dto.getCommentId())) {
                 throw new RuntimeException("Böyle bir yorum bulunmamaktadır.");
@@ -68,20 +65,38 @@ public class CommentService extends ServiceManager<Comment, String> {
                 return true;
             }
         } else {
-            throw new RuntimeException("Başkasına ait yorumu silemezsiniz");
+            throw new RuntimeException("Başkasına ait yorumu güncelleyemezsiniz");
         }
     }
 
-    public List<Comment> findAllCommentFromUser(String token){
-        Optional<Long> authId= jwtTokenProvider.getIdFromToken(token);
-        if (authId.isEmpty()){
+    public Boolean deleteComment(String token, String commentId) {
+        Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
+        Optional<Comment> comment = findById(commentId);
+        GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
+        System.out.println(comment);
+        if (authId.isEmpty()) {
+            throw new RuntimeException("Geçersiz token bilgisi");
+        } else {
+            if (comment.isEmpty()) {
+                throw new RuntimeException("Böyle bir yorum bulunmamaktadır");
+            } else if (!comment.get().getUserId().equals(user.getUserId())) {
+                throw new RuntimeException("Başkasına ait bir yorumu silemezsiniz");
+            }
+            delete(comment.get());
+            recipeManager.deleteRecipeCommentFromComment(comment.get().getRecipeId(),commentId);
+            return true;
+        }
+    }
+
+
+    public List<Comment> findAllCommentFromUser(String token) {
+        Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
+        if (authId.isEmpty()) {
             throw new RuntimeException("Geçersiz token bilgisi");
         }
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         return commentRepository.findAllByUserId(user.getUserId());
     }
-
-
 
 
 }

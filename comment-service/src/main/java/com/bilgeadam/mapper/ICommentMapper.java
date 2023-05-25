@@ -13,4 +13,6 @@ public interface ICommentMapper {
     Comment makeCommentDtoToComment(final MakeCommentRequestDto makeCommentRequestDto);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Comment updateCommentDtoToComment(final UpdateCommentRequestDto updateCommentRequestDto,@MappingTarget Comment comment);
+
+
 }
