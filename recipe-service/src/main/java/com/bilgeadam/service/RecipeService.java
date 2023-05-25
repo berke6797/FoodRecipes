@@ -84,6 +84,16 @@ public class RecipeService extends ServiceManager<Recipe, String> {
         return true;
     }
 
+    public Boolean saveRecipePointFromPoint(String recipeId,String pointId){
+        Optional<Recipe> recipe= recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()){
+            throw new RuntimeException("Böyle bir recipe bulunmamaktadır");
+        }
+        recipe.get().getPointId().add(pointId);
+        update(recipe.get());
+        return true;
+    }
+
 
 
 }

@@ -34,6 +34,7 @@ public class RecipeController {
     public ResponseEntity<List<Recipe>> findAllRecipe(){
         return ResponseEntity.ok(recipeService.findAll());
     }
+
     @Hidden
     @PostMapping("/save-comment-to-recipe/{commentId}/{recipeId}")
     public ResponseEntity<Boolean> saveRecipeCommentFromComment(@PathVariable String commentId, @PathVariable String recipeId){
@@ -45,8 +46,10 @@ public class RecipeController {
     public ResponseEntity<Boolean> deleteRecipeCommentFromComment(@PathVariable String recipeId, @PathVariable String commentId){
         return ResponseEntity.ok(recipeService.deleteRecipeCommentFromComment(recipeId,commentId));
     }
-
-
-
+    @Hidden
+    @PostMapping("/save-point-to-recipe/{recipeId}/{pointId}")
+    public ResponseEntity<Boolean> saveRecipePointFromPoint(@PathVariable String recipeId,@PathVariable String pointId){
+        return ResponseEntity.ok(recipeService.saveRecipePointFromPoint(recipeId, pointId));
+    }
 
 }

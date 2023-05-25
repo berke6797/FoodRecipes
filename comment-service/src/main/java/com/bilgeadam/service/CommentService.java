@@ -88,7 +88,6 @@ public class CommentService extends ServiceManager<Comment, String> {
         }
     }
 
-
     public List<Comment> findAllCommentFromUser(String token) {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
         if (authId.isEmpty()) {

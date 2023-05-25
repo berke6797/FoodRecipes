@@ -12,7 +12,7 @@ public interface IRecipeManager {
     public ResponseEntity<Boolean> saveRecipeCommentFromComment(@PathVariable String commentId,@PathVariable String recipeId);
     @DeleteMapping("/delete-comment-to-recipe/{recipeId}/{commentId}")
     public ResponseEntity<Boolean> deleteRecipeCommentFromComment(@PathVariable String recipeId, @PathVariable String commentId);
-
-
+    @PostMapping("/save-point-to-recipe/{recipeId}/{pointId}")
+    public ResponseEntity<Boolean> saveRecipePointFromPoint(@PathVariable String recipeId,@PathVariable String pointId);
 
 }
