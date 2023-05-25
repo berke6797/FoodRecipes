@@ -14,5 +14,6 @@ public interface IRecipeManager {
     public ResponseEntity<Boolean> deleteRecipeCommentFromComment(@PathVariable String recipeId, @PathVariable String commentId);
     @PostMapping("/save-point-to-recipe/{recipeId}/{pointId}")
     public ResponseEntity<Boolean> saveRecipePointFromPoint(@PathVariable String recipeId,@PathVariable String pointId);
-
+    @PostMapping("/delete-point-to-recipe/{pointId}/{recipeId}")
+    public ResponseEntity<Boolean> deleteRecipePointFromPoint(@PathVariable String pointId,@PathVariable String recipeId);
 }

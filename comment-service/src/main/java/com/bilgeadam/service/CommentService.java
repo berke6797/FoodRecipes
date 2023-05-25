@@ -73,7 +73,6 @@ public class CommentService extends ServiceManager<Comment, String> {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
         Optional<Comment> comment = findById(commentId);
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
-        System.out.println(comment);
         if (authId.isEmpty()) {
             throw new RuntimeException("Geçersiz token bilgisi");
         } else {

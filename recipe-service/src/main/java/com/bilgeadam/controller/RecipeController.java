@@ -51,5 +51,11 @@ public class RecipeController {
     public ResponseEntity<Boolean> saveRecipePointFromPoint(@PathVariable String recipeId,@PathVariable String pointId){
         return ResponseEntity.ok(recipeService.saveRecipePointFromPoint(recipeId, pointId));
     }
+    @Hidden
+    @PostMapping("/delete-point-to-recipe/{pointId}/{recipeId}")
+    public ResponseEntity<Boolean> deleteRecipePointFromPoint(@PathVariable String pointId,@PathVariable String recipeId){
+        return ResponseEntity.ok(recipeService.deleteRecipePointFromPoint(pointId,recipeId));
+    }
+
 
 }

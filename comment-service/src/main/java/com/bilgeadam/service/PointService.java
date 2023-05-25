@@ -1,6 +1,7 @@
 package com.bilgeadam.service;
 
 import com.bilgeadam.dto.request.GivePointRequestDto;
+import com.bilgeadam.dto.request.UpdatePointRequestDto;
 import com.bilgeadam.dto.response.GetUserProfileResponseDto;
 import com.bilgeadam.manager.IRecipeManager;
 import com.bilgeadam.manager.IUserManager;
@@ -34,23 +35,58 @@ public class PointService extends ServiceManager<Point, String> {
 
     public Boolean givePoint(GivePointRequestDto dto, String token) {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
-        GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
-        Point point = IPointMapper.INSTANCE.givePointRequestDtoToPoint(dto);
         if (authId.isEmpty()) {
             throw new RuntimeException("Geçersiz token bilgisi");
         }
+        GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
+        Point point = IPointMapper.INSTANCE.givePointRequestDtoToPoint(dto);
         if (!point.getRecipeId().equals(dto.getRecipeId())) {
             throw new RuntimeException("Böyle bir tarif bulunmamaktadır");
         } else {
-            if (pointRepository.existsPointByRecipeIdAndUserId(dto.getRecipeId(), user.getUserId())) {
+            Optional<Point> optionalPoint = pointRepository.findByRecipeIdAndUserId(dto.getRecipeId(), user.getUserId());
+            if (optionalPoint.isPresent()) {
                 throw new RuntimeException("Bu tarifi daha önce puanladınız.");
+            } else {
+                point.setUserId(user.getUserId());
+                point.setRecipeId(dto.getRecipeId());
+                save(point);
+                recipeManager.saveRecipePointFromPoint(dto.getRecipeId(), point.getPointId());
             }
-            point.setUserId(user.getUserId());
-            point.setRecipeId(dto.getRecipeId());
-            save(point);
-            recipeManager.saveRecipePointFromPoint(dto.getRecipeId(), point.getPointId());
             return true;
         }
+    }
+
+    public Boolean updatePoint(UpdatePointRequestDto dto, String token) {
+        Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
+        if (authId.isEmpty())
+            throw new RuntimeException("Geçersiz token bilgisi");
+        GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
+        Optional<Point> optionalPoint = pointRepository.findById(dto.getPointId());
+        if (optionalPoint.isEmpty())
+            throw new RuntimeException("Bu tarif için puan bulunamadı");
+        if (user.getUserId().equals(optionalPoint.get().getUserId())) {
+            optionalPoint.get().setPointId(dto.getPointId());
+            Point point = IPointMapper.INSTANCE.updatePointRequestDtoToPoint(dto, optionalPoint.get());
+            update(point);
+        }
+        return true;
+
+    }
+
+
+    public Boolean deletePoint(String pointId, String token) {
+        Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
+        GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
+        Optional<Point> point = findById(pointId);
+        if (authId.isEmpty())
+            throw new RuntimeException("Geçersiz token hatası");
+        if (point.isEmpty())
+            throw new RuntimeException("Daha önce bu tarife puan vermemişsiniz");
+        if (!point.get().getUserId().equals(user.getUserId()))
+            throw new RuntimeException("Başkasına ait bir puanı silemezsiniz");
+        delete(point.get());
+        recipeManager.deleteRecipePointFromPoint(pointId, point.get().getRecipeId());
+        return true;
     }
 
     public List<Point> findAllPointsFromUser(String token) {
@@ -61,4 +97,5 @@ public class PointService extends ServiceManager<Point, String> {
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         return pointRepository.findAllByUserId(user.getUserId());
     }
+
 }
