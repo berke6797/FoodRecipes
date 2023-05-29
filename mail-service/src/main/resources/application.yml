@@ -22,3 +22,4 @@ spring:
             enable: true
 rabbitmq:
   registerMailQueue: mail-queue
+  favoriteCategoryQueue: favoriteCategoryQueue

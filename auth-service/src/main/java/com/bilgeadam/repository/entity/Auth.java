@@ -16,6 +16,7 @@ public class Auth extends Base{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long authId;
+    private Long addressId;
     private String name;
     private String surname;
     @Column(unique = true)

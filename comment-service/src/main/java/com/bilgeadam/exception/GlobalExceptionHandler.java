@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public final ResponseEntity<ErrorMessage> handlePsqlException(DataIntegrityViolationException exception) {
-        ErrorType errorType = ErrorType.USERNAME_DUPLICATE;
+        ErrorType errorType = ErrorType.COMMENT_EXISTS;
         return new ResponseEntity<>(createError(errorType, exception), errorType.getHttpStatus());
     }
 }

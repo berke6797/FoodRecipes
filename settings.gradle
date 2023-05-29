@@ -1,11 +1,7 @@
-rootProject.name = 'YemekSepeti'
+rootProject.name = 'YemekTarifiKitabi'
 include 'auth-service'
 include 'user-service'
 include 'recipe-service'
-include 'comment-service'
 include 'mail-service'
-include 'user-service'
-include 'mail-service'
-include 'recipe-service'
 include 'comment-service'
 

@@ -3,6 +3,8 @@ package com.bilgeadam.service;
 import com.bilgeadam.dto.request.MakeCommentRequestDto;
 import com.bilgeadam.dto.request.UpdateCommentRequestDto;
 import com.bilgeadam.dto.response.GetUserProfileResponseDto;
+import com.bilgeadam.exception.CommentManagerException;
+import com.bilgeadam.exception.ErrorType;
 import com.bilgeadam.manager.IRecipeManager;
 import com.bilgeadam.manager.IUserManager;
 import com.bilgeadam.mapper.ICommentMapper;
@@ -33,14 +35,14 @@ public class CommentService extends ServiceManager<Comment, String> {
     public Boolean makeComment(MakeCommentRequestDto dto, String token) {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
         if (authId.isEmpty()) {
-            throw new RuntimeException("Geçersiz token bilgisi");
+        throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         }
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         Comment comment = ICommentMapper.INSTANCE.makeCommentDtoToComment(dto);
         comment.setUserId(user.getUserId());
         comment.setUsername(user.getUsername());
         if (!comment.getRecipeId().equals(dto.getRecipeId())) {
-            throw new RuntimeException("Böyle bir tarif bulunmamaktadır");
+            throw new CommentManagerException(ErrorType.RECIPE_NOT_FOUND);
         } else {
             save(comment);
             recipeManager.saveRecipeCommentFromComment(comment.getCommentId(), comment.getRecipeId());
@@ -52,20 +54,20 @@ public class CommentService extends ServiceManager<Comment, String> {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
         Comment comment = findById(dto.getCommentId()).get();
         if (authId.isEmpty()) {
-            throw new RuntimeException("Geçersiz token bilgisi");
+            throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         }
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         ICommentMapper.INSTANCE.updateCommentDtoToComment(dto, comment);
         if (user.getUserId().equals(comment.getUserId())) {
             if (!comment.getCommentId().equals(dto.getCommentId())) {
-                throw new RuntimeException("Böyle bir yorum bulunmamaktadır.");
+                throw new CommentManagerException(ErrorType.COMMENT_NOT_FOUND);
             } else {
                 comment.setComment(dto.getComment());
                 update(comment);
                 return true;
             }
         } else {
-            throw new RuntimeException("Başkasına ait yorumu güncelleyemezsiniz");
+            throw new CommentManagerException(ErrorType.COULD_NOT_UPDATE_COMMENT);
         }
     }
 
@@ -74,12 +76,12 @@ public class CommentService extends ServiceManager<Comment, String> {
         Optional<Comment> comment = findById(commentId);
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         if (authId.isEmpty()) {
-            throw new RuntimeException("Geçersiz token bilgisi");
+            throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         } else {
             if (comment.isEmpty()) {
-                throw new RuntimeException("Böyle bir yorum bulunmamaktadır");
+                throw new CommentManagerException(ErrorType.COMMENT_NOT_FOUND);
             } else if (!comment.get().getUserId().equals(user.getUserId())) {
-                throw new RuntimeException("Başkasına ait bir yorumu silemezsiniz");
+                throw new CommentManagerException(ErrorType.COULD_NOT_DELETE_COMMENT);
             }
             delete(comment.get());
             recipeManager.deleteRecipeCommentFromComment(comment.get().getRecipeId(),commentId);
@@ -90,7 +92,7 @@ public class CommentService extends ServiceManager<Comment, String> {
     public List<Comment> findAllCommentFromUser(String token) {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
         if (authId.isEmpty()) {
-            throw new RuntimeException("Geçersiz token bilgisi");
+            throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         }
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         return commentRepository.findAllByUserId(user.getUserId());

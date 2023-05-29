@@ -48,7 +48,7 @@ allprojects {
         implementation libs.springOpenFeign
         implementation libs.javaJWT
         implementation libs.springCloudSleuth
-        implementation libs.springBootDataRedis
+        //implementation libs.springBootDataRedis
     }
 }
 

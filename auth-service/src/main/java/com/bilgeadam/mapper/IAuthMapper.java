@@ -1,11 +1,9 @@
 package com.bilgeadam.mapper;
 
-import com.bilgeadam.dto.request.CreateUserRequestDto;
-import com.bilgeadam.dto.request.LoginRequestDto;
-import com.bilgeadam.dto.request.PasswordChangeRequestDtoForAuth;
-import com.bilgeadam.dto.request.RegisterRequestDto;
+import com.bilgeadam.dto.request.*;
 import com.bilgeadam.dto.response.RegisterResponseDto;
 import com.bilgeadam.rabbitmq.model.RegisterMailModel;
+import com.bilgeadam.repository.entity.Address;
 import com.bilgeadam.repository.entity.Auth;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -41,4 +39,7 @@ public interface IAuthMapper {
      */
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Auth passwordChangeRequestDtoToAuth(PasswordChangeRequestDtoForAuth dto,@MappingTarget Auth auth);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    Auth updateFromUser(final UpdateUserForAuthAndAddressDto dto,@MappingTarget Auth auth);
+
 }

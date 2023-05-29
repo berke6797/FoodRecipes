@@ -9,12 +9,15 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
 @SuperBuilder
-public class UserProfile extends Base{
+public class UserProfile extends Base {
     @Id
     private String userId;
     private Long authId;
@@ -31,6 +34,8 @@ public class UserProfile extends Base{
     private String buildingNumber;      // Bina Numarası
     private String apartmentNumber;     // Daire Numarası
     private Integer zipCode;            // Posta Kodu
+    private List<String> favRecipe = new ArrayList<>();
+    private List<String> favCategory = new ArrayList<>();
     @Builder.Default
-    private EStatus status=EStatus.PENDING;
+    private EStatus status = EStatus.PENDING;
 }

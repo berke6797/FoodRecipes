@@ -7,10 +7,20 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMqConfig {
+
     @Value("{rabbitmq.registerMailQueue}")
     private String registerMailQueue;
     @Bean
     Queue registerMailQueue(){
         return new Queue(registerMailQueue);
     }
+
+    @Value("${rabbitmq.favoriteCategoryQueue}")
+    String favoriteCategoryQueue;
+    @Bean
+    Queue favoriteCategoryQueue() {
+        return new Queue(favoriteCategoryQueue);
+    }
+
+
 }

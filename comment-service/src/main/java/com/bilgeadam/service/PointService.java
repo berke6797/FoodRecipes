@@ -3,6 +3,8 @@ package com.bilgeadam.service;
 import com.bilgeadam.dto.request.GivePointRequestDto;
 import com.bilgeadam.dto.request.UpdatePointRequestDto;
 import com.bilgeadam.dto.response.GetUserProfileResponseDto;
+import com.bilgeadam.exception.CommentManagerException;
+import com.bilgeadam.exception.ErrorType;
 import com.bilgeadam.manager.IRecipeManager;
 import com.bilgeadam.manager.IUserManager;
 import com.bilgeadam.mapper.IPointMapper;
@@ -36,16 +38,16 @@ public class PointService extends ServiceManager<Point, String> {
     public Boolean givePoint(GivePointRequestDto dto, String token) {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
         if (authId.isEmpty()) {
-            throw new RuntimeException("Geçersiz token bilgisi");
+            throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         }
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         Point point = IPointMapper.INSTANCE.givePointRequestDtoToPoint(dto);
         if (!point.getRecipeId().equals(dto.getRecipeId())) {
-            throw new RuntimeException("Böyle bir tarif bulunmamaktadır");
+            throw new CommentManagerException(ErrorType.RECIPE_NOT_FOUND);
         } else {
             Optional<Point> optionalPoint = pointRepository.findByRecipeIdAndUserId(dto.getRecipeId(), user.getUserId());
             if (optionalPoint.isPresent()) {
-                throw new RuntimeException("Bu tarifi daha önce puanladınız.");
+                throw new CommentManagerException(ErrorType.POINT_EXISTS);
             } else {
                 point.setUserId(user.getUserId());
                 point.setRecipeId(dto.getRecipeId());
@@ -59,11 +61,12 @@ public class PointService extends ServiceManager<Point, String> {
     public Boolean updatePoint(UpdatePointRequestDto dto, String token) {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
         if (authId.isEmpty())
-            throw new RuntimeException("Geçersiz token bilgisi");
+            throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         Optional<Point> optionalPoint = pointRepository.findById(dto.getPointId());
         if (optionalPoint.isEmpty())
-            throw new RuntimeException("Bu tarif için puan bulunamadı");
+            throw new CommentManagerException(ErrorType.POINT_NOT_FOUND);
+
         if (user.getUserId().equals(optionalPoint.get().getUserId())) {
             optionalPoint.get().setPointId(dto.getPointId());
             Point point = IPointMapper.INSTANCE.updatePointRequestDtoToPoint(dto, optionalPoint.get());
@@ -79,11 +82,11 @@ public class PointService extends ServiceManager<Point, String> {
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         Optional<Point> point = findById(pointId);
         if (authId.isEmpty())
-            throw new RuntimeException("Geçersiz token hatası");
+            throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         if (point.isEmpty())
-            throw new RuntimeException("Daha önce bu tarife puan vermemişsiniz");
+            throw new CommentManagerException(ErrorType.POINT_NOT_FOUND);
         if (!point.get().getUserId().equals(user.getUserId()))
-            throw new RuntimeException("Başkasına ait bir puanı silemezsiniz");
+            throw new CommentManagerException(ErrorType.COULD_NOT_DELETE_POINT);
         delete(point.get());
         recipeManager.deleteRecipePointFromPoint(pointId, point.get().getRecipeId());
         return true;
@@ -92,7 +95,7 @@ public class PointService extends ServiceManager<Point, String> {
     public List<Point> findAllPointsFromUser(String token) {
         Optional<Long> authId = jwtTokenProvider.getIdFromToken(token);
         if (authId.isEmpty()) {
-            throw new RuntimeException("Geçersiz token");
+            throw new CommentManagerException(ErrorType.INVALID_TOKEN);
         }
         GetUserProfileResponseDto user = userManager.getUser(authId.get()).getBody();
         return pointRepository.findAllByUserId(user.getUserId());

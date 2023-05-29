@@ -1,5 +1,6 @@
 package com.bilgeadam.rabbitmq.consumer;
 
+import com.bilgeadam.rabbitmq.model.FavoriteCategoriesMailModel;
 import com.bilgeadam.rabbitmq.model.RegisterMailModel;
 import com.bilgeadam.service.MailSenderService;
 import lombok.RequiredArgsConstructor;
@@ -15,4 +16,10 @@ public class RegisterMailConsumer {
     public void sendActivationCode(RegisterMailModel registerMailModel){
         mailSenderService.sendMail(registerMailModel);
     }
+
+    @RabbitListener(queues = ("${rabbitmq.favoriteCategoryQueue}"))
+    public void sendFavoriteCategpry(FavoriteCategoriesMailModel model){
+        mailSenderService.favoriteCategoryMail(model);
+    }
+
 }

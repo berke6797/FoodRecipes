@@ -2,12 +2,14 @@ package com.bilgeadam.repository.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder

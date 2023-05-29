@@ -1,5 +1,6 @@
 server:
   port: 9092
+
 spring:
   data:
     mongodb:
@@ -8,7 +9,19 @@ spring:
       database: YemekTarifiUygulamaDB
       username: JavaUser
       password: root
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: java7
+    password: root
+
 jwt:
   secretkey: ${secretkey}
   audience: ${audience}
   issuer: ${issuer}
+
+rabbitmq:
+  exchange: exchange
+  favoriteCategoryQueue: favoriteCategoryQueue
+  favoriteCategoryBindingKey: favoriteCategoryBindingKey
