@@ -9,7 +9,7 @@ spring:
     password: root
 
   mail:
-    username: berkekznc97@gmail.com
+    username: ${USERNAME}
     # Google account manager'daki uygulama şifrelerden oluşturuldu.
     password: ${PASSWORD}
     host: smtp.gmail.com
