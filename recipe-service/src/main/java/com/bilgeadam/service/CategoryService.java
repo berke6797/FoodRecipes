@@ -5,6 +5,7 @@ import com.bilgeadam.dto.request.UpdateCategoryRequestDto;
 import com.bilgeadam.exception.ErrorType;
 import com.bilgeadam.exception.RecipeManagerException;
 import com.bilgeadam.mapper.ICategoryMapper;
+import com.bilgeadam.mapper.IRecipeMapper;
 import com.bilgeadam.repository.ICategoryRepository;
 import com.bilgeadam.repository.entity.Category;
 import com.bilgeadam.repository.enums.ERole;
@@ -47,7 +48,8 @@ public class CategoryService extends ServiceManager<Category, String> {
             throw new RecipeManagerException(ErrorType.EXISTS_CATEGORY);
 
         }
-        update(ICategoryMapper.INSTANCE.fromUpdateCategoryRequestDtoToCategory(dto));
+        Category category= findById(dto.getCategoryId()).get();
+        update(ICategoryMapper.INSTANCE.fromUpdateCategoryRequestDtoToCategory(dto,category));
         return true;
     }
 

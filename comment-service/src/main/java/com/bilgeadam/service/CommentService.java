@@ -98,5 +98,13 @@ public class CommentService extends ServiceManager<Comment, String> {
         return commentRepository.findAllByUserId(user.getUserId());
     }
 
+    public Boolean deleteCommentFromRecipe(String recipeId){
+        Optional<Comment> comment= commentRepository.findByRecipeId(recipeId);
+        if (comment.isEmpty()){
+            throw new CommentManagerException(ErrorType.COMMENT_NOT_FOUND);
+        }
+        delete(comment.get());
+        return true;
+    }
 
 }

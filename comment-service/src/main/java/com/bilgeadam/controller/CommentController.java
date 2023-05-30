@@ -4,6 +4,7 @@ import com.bilgeadam.dto.request.MakeCommentRequestDto;
 import com.bilgeadam.dto.request.UpdateCommentRequestDto;
 import com.bilgeadam.repository.entity.Comment;
 import com.bilgeadam.service.CommentService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +31,10 @@ public class CommentController {
     @DeleteMapping(DELETE_COMMENT+"/{token}/{commentId}")
     public ResponseEntity<Boolean> deleteComment(@PathVariable String token, @PathVariable String commentId){
         return ResponseEntity.ok(commentService.deleteComment(token,commentId));
+    }
+    @Hidden
+    @PostMapping("/delete-comment-from-recipe-delete/{recipeId}")
+    public ResponseEntity<Boolean> deleteCommentFromRecipe(@PathVariable String recipeId){
+        return ResponseEntity.ok(commentService.deleteCommentFromRecipe(recipeId));
     }
 }

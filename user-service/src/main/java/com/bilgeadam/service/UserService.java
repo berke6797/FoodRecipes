@@ -149,6 +149,9 @@ public class UserService extends ServiceManager<UserProfile, String> {
         if (user.isEmpty()) {
             throw new UserManagerException(ErrorType.USER_NOT_FOUND);
         }
+        if (user.get().getFavRecipe().equals(recipeId)){
+            throw new RuntimeException("Daha önce bu tarifi favoriye eklediniz...");
+        }
         user.get().getFavRecipe().add(recipeId);
         GetRecipeAndCategoryResponseDto recipeAndCategoryResponseDto = recipeManager.getRecipeAndCategoryId(recipeId).getBody();
         recipeAndCategoryResponseDto.getCategoryId().forEach(

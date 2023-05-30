@@ -46,14 +46,14 @@ public class RecipeService extends ServiceManager<Recipe, String> {
             throw new RecipeManagerException(ErrorType.ROLE_ERROR);
         }
         save(IRecipeMapper.INSTANCE.fromSaveRecipeRequestDtoToRecipe(dto));
-        Set<GetUserWithFavoriCategory> getUserCategory= userManager.getUserWithFavoriCategory(dto.getCategoryId()).getBody();
-            getUserCategory.forEach(user ->{
-                favoriteCategoriesMailProducer.sendMailForFavoriteCategory(FavoriteCategoriesMailModel.builder()
-                                .recipeName(dto.getRecipeName())
-                                .username(user.getUsername())
-                                .email(user.getEmail())
-                        .build());
-            });
+        Set<GetUserWithFavoriCategory> getUserCategory = userManager.getUserWithFavoriCategory(dto.getCategoryId()).getBody();
+        getUserCategory.forEach(user -> {
+            favoriteCategoriesMailProducer.sendMailForFavoriteCategory(FavoriteCategoriesMailModel.builder()
+                    .recipeName(dto.getRecipeName())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .build());
+        });
         return true;
 
     }
@@ -83,6 +83,7 @@ public class RecipeService extends ServiceManager<Recipe, String> {
         commentManager.deleteCommentFromRecipe(recipeId);
         return true;
     }
+
 
     public List<Recipe> filterRecipeListByCategory(String categoryId) {
         List<Recipe> recipes = recipeRepository.findAllByCategoryId(categoryId);
@@ -165,17 +166,17 @@ public class RecipeService extends ServiceManager<Recipe, String> {
         if (recipes.isEmpty()) {
             throw new RecipeManagerException(ErrorType.RECIPE_NOT_FOUND);
         }
-        Comparator<Recipe> comparator=Comparator.comparing(x -> x.getNutritionalValue().getCalorie());
-        Collections.sort(recipes,comparator);
+        Comparator<Recipe> comparator = Comparator.comparing(x -> x.getNutritionalValue().getCalorie());
+        Collections.sort(recipes, comparator);
         return recipes;
     }
 
-    public GetRecipeAndCategoryResponseDto getRecipeAndCategoryId(String recipeId){
-        Optional<Recipe> optionalRecipe= recipeRepository.findById(recipeId);
-        if (optionalRecipe.isEmpty()){
+    public GetRecipeAndCategoryResponseDto getRecipeAndCategoryId(String recipeId) {
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
+        if (optionalRecipe.isEmpty()) {
             throw new RecipeManagerException(ErrorType.RECIPE_NOT_FOUND);
         }
-        List<String> categoryIdList=optionalRecipe.get().getCategoryId();
+        List<String> categoryIdList = optionalRecipe.get().getCategoryId();
         return GetRecipeAndCategoryResponseDto.builder().recipeId(recipeId).categoryId(categoryIdList).build();
     }
 }
